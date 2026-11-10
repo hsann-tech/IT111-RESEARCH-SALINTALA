@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign Up | SalinTala</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/css/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
+  <script src="../assets/js/app.js"></script>
+</head>
+<body class="auth">
+
+  <div class="auth-top"><button class="icon-btn" id="theme" title="Toggle theme"><i class="bi bi-moon-stars"></i></button></div>
+
+  <div class="cardx auth-card">
+    <div class="text-center mb-4">
+      <img src="../assets/images/logo.svg" alt="" width="56" height="56" class="mb-3">
+      <h3 class="fw-bold mb-1">Create account</h3>
+      <p class="muted mb-0">Start turning lectures into notes</p>
+    </div>
+
+    <form id="form">
+      <label for="name" class="form-label small fw-semibold">Full name</label>
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-person"></i></span>
+        <input type="text" class="form-control" id="name" placeholder="Juan Dela Cruz" required>
+      </div>
+
+      <label for="email" class="form-label small fw-semibold">Email</label>
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+        <input type="email" class="form-control" id="email" placeholder="you@ustp.edu.ph" required>
+      </div>
+
+      <label for="password" class="form-label small fw-semibold">Password</label>
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+        <input type="password" class="form-control" id="password" minlength="6" placeholder="At least 6 characters" required>
+      </div>
+
+      <label for="confirm" class="form-label small fw-semibold">Confirm password</label>
+      <div class="input-group mb-1">
+        <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+        <input type="password" class="form-control" id="confirm" minlength="6" placeholder="Repeat password" required>
+      </div>
+      <div class="small text-danger mb-3 d-none" id="err">Passwords do not match.</div>
+
+      <button type="submit" class="go go-lg w-100 mt-3" id="btn">
+        <span id="btnText">Sign Up</span><i class="bi bi-arrow-right"></i>
+      </button>
+    </form>
+
+    <div class="divider">Already registered?</div>
+    <a href="login.html" class="btn-outline-soft">Login to your account</a>
+    <p class="text-center mt-3 mb-0 small"><a href="../index.html" class="muted"><i class="bi bi-arrow-left"></i> Back to home</a></p>
+  </div>
+
+  <script src="../assets/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById("form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var ok = document.getElementById("password").value === document.getElementById("confirm").value;
+      document.getElementById("err").classList.toggle("d-none", ok);
+      if (!ok) return;
+      var btn = document.getElementById("btn");
+      btn.disabled = true;
+      document.getElementById("btnText").textContent = "Creating account...";
+      btn.querySelector("i").outerHTML = '<i class="bi bi-arrow-repeat spin"></i>';
+      setTimeout(function () { location.href = "login.html"; }, 700);
+    });
+  </script>
+</body>
+</html>
