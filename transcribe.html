@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transcribe | SalinTala</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/css/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
+  <script src="../assets/js/app.js"></script>
+</head>
+<body>
+
+  <nav class="navbar nav-glass sticky-top navbar-dark">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="../index.html">
+        <img src="../assets/images/logo.svg" alt="" width="32" height="32" class="me-2">SalinTala
+      </a>
+      <div class="d-flex gap-2">
+        <a class="icon-btn text-decoration-none" href="../index.html" title="Home"><i class="bi bi-house"></i></a>
+        <a class="icon-btn text-decoration-none" href="transcripts.html" title="My Transcripts"><i class="bi bi-journal-text"></i></a>
+        <a class="icon-btn text-decoration-none" href="dashboard.html" title="Dashboard"><i class="bi bi-grid"></i></a>
+        <button class="icon-btn" id="theme" title="Toggle theme"><i class="bi bi-moon-stars"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero2">
+    <div class="container">
+      <span class="eyebrow"><i class="bi bi-stars"></i> English · Filipino · Cebuano</span>
+      <h1>Turn any class discussion into notes</h1>
+      <p>Upload a recording and SalinTala produces a searchable transcript that shows where the lecture switched languages.</p>
+      <div class="stepper">
+        <div class="stp on" id="st1"><span class="dot">1</span>Upload</div><div class="bar" id="b1"></div>
+        <div class="stp" id="st2"><span class="dot">2</span>Transcribe</div><div class="bar" id="b2"></div>
+        <div class="stp" id="st3"><span class="dot">3</span>Review</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container pull pb-5">
+    <div class="row g-4">
+
+      <!-- LEFT -->
+      <div class="col-lg-4">
+        <div class="sticky-col">
+          <div class="cardx p-4 mb-4">
+            <div class="hd"><span class="ic"><i class="bi bi-cloud-arrow-up"></i></span>Recording</div>
+
+            <label for="file" class="dz" id="drop">
+              <div class="wave" id="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="fw-bold" id="fileName">Drop audio here or click to browse</div>
+              <small class="muted">MP3, WAV, M4A</small>
+            </label>
+            <input type="file" id="file" accept="audio/*" class="d-none">
+            <div id="playerWrap" class="mt-3 d-none"><audio id="player" controls></audio></div>
+
+            <label class="form-label small fw-semibold mt-3">Class / Subject</label>
+            <input class="form-control" id="subject" placeholder="e.g. BTLED 101, Week 4">
+
+            <label class="form-label small fw-semibold mt-3">Recording condition</label>
+            <select class="form-select" id="cond">
+              <option>Quiet room</option>
+              <option>Some background noise</option>
+              <option>Noisy / far from microphone</option>
+            </select>
+
+            <button id="run" class="go w-100 mt-4"><i class="bi bi-magic me-1"></i> Transcribe</button>
+            <div class="track mt-3 d-none" id="prog"><div></div></div>
+          </div>
+
+          <div class="cardx p-4">
+            <div class="hd"><span class="ic"><i class="bi bi-palette"></i></span>Legend</div>
+            <div class="legend-row"><span class="chip c-en">EN</span> English</div>
+            <div class="legend-row"><span class="chip c-fil">FIL</span> Filipino</div>
+            <div class="legend-row"><span class="chip c-ceb">CEB</span> Cebuano</div>
+            <div class="legend-row"><span class="low">word</span> Low confidence. Click to verify.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="col-lg-8">
+        <div class="cardx p-4">
+          <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+            <div class="hd mb-0 me-auto"><span class="ic"><i class="bi bi-journal-text"></i></span>Transcript</div>
+            <button class="tool" id="save"><i class="bi bi-save me-1"></i>Save</button>
+            <button class="tool" id="copy"><i class="bi bi-clipboard me-1"></i>Copy</button>
+            <button class="tool" id="dl"><i class="bi bi-download me-1"></i>.txt</button>
+          </div>
+
+          <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
+            <div class="input-group" style="max-width:280px">
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
+              <input id="q" class="form-control" placeholder="Search transcript">
+            </div>
+            <div class="pillbar" id="filters">
+              <button class="active" data-f="all">All</button>
+              <button data-f="en">English</button>
+              <button data-f="fil">Filipino</button>
+              <button data-f="ceb">Cebuano</button>
+            </div>
+          </div>
+
+          <div class="stats mb-3">
+            <div class="stat"><b id="sSeg">0</b><small>Segments</small></div>
+            <div class="stat"><b id="sWords">0</b><small>Words</small></div>
+            <div class="stat"><b id="sFlag" style="color:#f59e0b">0</b><small>To verify</small></div>
+            <div class="stat"><b id="sMix">0%</b><small>Code-switched</small></div>
+          </div>
+
+          <div class="mix mb-4" id="mixbar" title="Language share">
+            <div style="width:0;background:var(--en)"></div><div style="width:0;background:var(--fil)"></div><div style="width:0;background:var(--ceb)"></div>
+          </div>
+
+          <div class="tbox" id="box">
+            <div class="empty">
+              <img src="../assets/images/empty-transcript.svg" alt="" width="140" class="mb-2">
+              <div class="fw-bold">No transcript yet</div>
+              <div class="small">Upload a recording and press <b>Transcribe</b>.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cardx p-4 mt-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="hd mb-0"><span class="ic"><i class="bi bi-bar-chart-line"></i></span>Accuracy (Word Error Rate)</div>
+            <span class="chip" style="background:var(--muted)">Sample data</span>
+          </div>
+          <div class="row text-center g-3 align-items-center">
+            <div class="col-6 col-md-4">
+              <div class="ring mx-auto" style="--v:18;--c:var(--brand)"><span>18%</span></div>
+              <div class="fw-bold mt-2">SalinTala</div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="ring mx-auto" style="--v:27;--c:#94a3b8"><span>27%</span></div>
+              <div class="fw-bold mt-2">Existing tool</div>
+            </div>
+            <div class="col-12 col-md-4 text-md-start">
+              <div class="fw-bold" style="color:var(--brand)"><i class="bi bi-arrow-down-right"></i> 9 points lower</div>
+              <small class="muted">Lower WER is better. Replace these placeholders with your real test results.</small>
+            </div>
+          </div>
+        </div>
+
+        <p class="muted small text-center mt-3 mb-0"><i class="bi bi-info-circle"></i> Transcripts may contain errors. Please review them before using them as official records.</p>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toast" class="toast text-bg-dark border-0" role="status" style="border-radius:14px">
+      <div class="toast-body" id="toastMsg"></div>
+    </div>
+  </div>
+
+  <script src="../assets/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Sample data. Replace with your model's output.
+    // [seconds, language, text]. Words in [[ ]] are low confidence.
+    const DATA = [
+      [3,  "en",  "Good morning everyone. Today we will talk about [[lesson planning]]."],
+      [11, "fil", "Ang unang hakbang ay alamin kung ano ang gusto nating matutunan ng mga estudyante."],
+      [24, "ceb", "Kinahanglan nato nga klaro ang atong learning objectives para dali masabtan."],
+      [37, "en",  "An objective should be specific and measurable, di ba?"],
+      [46, "fil", "Halimbawa, pagkatapos ng klase, [[kaya nilang]] ipaliwanag ang konsepto."],
+      [58, "ceb", "Unya dayon, mag-buhat mo og usa ka short activity aron ma-test ang inyong nakat-unan."],
+      [70, "en",  "Please remember the assessment should match the objective."]
+    ];
+    const LABEL = { en: "EN", fil: "FIL", ceb: "CEB" };
+    const $ = id => document.getElementById(id);
+    let filter = "all", ready = false;
+
+    const fmt = s => String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+    const clean = t => t.replace(/\[\[|\]\]/g, "");
+    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const toast = m => { $("toastMsg").textContent = m; bootstrap.Toast.getOrCreateInstance($("toast"), { delay: 1800 }).show(); };
+
+    function setStep(n) {
+      [1, 2, 3].forEach(i => {
+        const el = $("st" + i);
+        el.className = "stp" + (i < n ? " done" : i === n ? " on" : "");
+        el.querySelector(".dot").innerHTML = i < n ? '<i class="bi bi-check-lg"></i>' : i;
+      });
+      $("b1").className = "bar" + (n > 1 ? " fill" : "");
+      $("b2").className = "bar" + (n > 2 ? " fill" : "");
+    }
+
+    function render() {
+      if (!ready) return;
+      const term = $("q").value.trim().toLowerCase();
+      let html = "", shown = 0, words = 0;
+      DATA.forEach(([sec, lang, text], i) => {
+        if (filter !== "all" && lang !== filter) return;
+        if (term && !clean(text).toLowerCase().includes(term)) return;
+        shown++; words += clean(text).split(/\s+/).length;
+        let out = text.replace(/\[\[(.+?)\]\]/g, (_, w) => `<span class="low" title="Low confidence. Click to verify">${w}</span>`);
+        if (term) out = out.replace(new RegExp("(" + esc(term) + ")(?![^<]*>)", "gi"), '<mark class="hit">$1</mark>');
+        html += `<div class="seg" data-i="${i}" style="animation-delay:${shown * 50}ms">
+          <div class="ts" data-t="${sec}" title="Jump to this moment">${fmt(sec)}</div>
+          <div><span class="chip c-${lang}">${LABEL[lang]}</span><p>${out}</p></div></div>`;
+      });
+      $("box").innerHTML = html || '<div class="empty"><div class="big"><i class="bi bi-search"></i></div><div class="fw-bold">No matches</div></div>';
+      $("sSeg").textContent = shown; $("sWords").textContent = words; updFlag();
+
+      const n = DATA.length, c = l => DATA.filter(d => d[1] === l).length / n * 100;
+      const kids = $("mixbar").children;
+      kids[0].style.width = c("en") + "%"; kids[1].style.width = c("fil") + "%"; kids[2].style.width = c("ceb") + "%";
+      $("sMix").textContent = Math.round(DATA.filter(d => d[1] !== "en").length / n * 100) + "%";
+    }
+    const updFlag = () => $("sFlag").textContent = $("box").querySelectorAll(".low:not(.ok)").length;
+
+    // Upload
+    const drop = $("drop"), file = $("file"), player = $("player");
+    file.addEventListener("change", () => {
+      const f = file.files[0]; if (!f) return;
+      $("fileName").textContent = f.name;
+      player.src = URL.createObjectURL(f); $("playerWrap").classList.remove("d-none");
+    });
+    ["dragenter", "dragover"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add("drag"); }));
+    ["dragleave", "drop"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove("drag"); }));
+    drop.addEventListener("drop", ev => { file.files = ev.dataTransfer.files; file.dispatchEvent(new Event("change")); });
+
+    // Transcribe (fake progress for the demo)
+    $("run").addEventListener("click", () => {
+      const btn = $("run"), prog = $("prog"), bar = prog.firstElementChild;
+      btn.disabled = true; btn.innerHTML = '<i class="bi bi-arrow-repeat spin me-1"></i> Transcribing...';
+      prog.classList.remove("d-none"); $("wave").classList.add("live"); setStep(2);
+      let p = 0;
+      const id = setInterval(() => {
+        p += 7; bar.style.width = Math.min(p, 100) + "%";
+        if (p >= 100) {
+          clearInterval(id);
+          setTimeout(() => {
+            prog.classList.add("d-none"); bar.style.width = "0"; $("wave").classList.remove("live");
+            btn.disabled = false; btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Transcribe again';
+            ready = true; setStep(3); render(); toast("Transcript ready");
+          }, 300);
+        }
+      }, 130);
+    });
+
+    // Interactions
+    $("q").addEventListener("input", render);
+    $("filters").addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      document.querySelectorAll("#filters button").forEach(x => x.classList.remove("active"));
+      b.classList.add("active"); filter = b.dataset.f; render();
+    });
+    $("box").addEventListener("click", e => {
+      const low = e.target.closest(".low");
+      if (low) { low.classList.toggle("ok"); updFlag(); return; }
+      const t = e.target.closest(".ts");
+      if (t && player.src) { player.currentTime = +t.dataset.t; player.play(); }
+    });
+
+    // Highlight the line that matches the audio time
+    player.addEventListener("timeupdate", () => {
+      if (!ready) return;
+      let cur = -1; DATA.forEach((d, i) => { if (player.currentTime >= d[0]) cur = i; });
+      document.querySelectorAll(".seg").forEach(s => s.classList.toggle("now", +s.dataset.i === cur));
+    });
+
+    const asText = () => DATA.map(d => `[${fmt(d[0])}] (${LABEL[d[1]]}) ${clean(d[2])}`).join("\n");
+    $("copy").addEventListener("click", () => { if (!ready) return toast("Nothing to copy yet"); navigator.clipboard.writeText(asText()); toast("Copied to clipboard"); });
+    $("dl").addEventListener("click", () => {
+      if (!ready) return toast("Nothing to download yet");
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([asText()], { type: "text/plain" }));
+      a.download = "salintala-transcript.txt"; a.click(); toast("Downloaded");
+    });
+
+    // Save to My Transcripts
+    $("save").addEventListener("click", () => {
+      if (!ready) return toast("Transcribe first");
+      const f = file.files[0];
+      SalinStore.addTranscript({
+        id: Date.now(),
+        title: $("subject").value.trim() || (f ? f.name : "Untitled recording"),
+        condition: $("cond").value,
+        created: new Date().toISOString(),
+        data: DATA
+      });
+      toast("Saved to My Transcripts");
+    });
+    // Theme toggle is handled by ../assets/js/app.js
+  </script>
+</body>
+</html>
